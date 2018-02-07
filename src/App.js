@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import $ from 'jquery'
 import './App.css';
 import {Movies} from './components/Movies'
+import {MovieDeets} from './components/MovieDeets'
+let apiKey = "48f53faf"
+
+let url = "http://www.omdbapi.com/?i=insertSelectedimdbIDhere&apikey=insertyourkeyhere"
 
 class App extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state= {
       movies:[]
     }
-
+    this.viewMovieInfo=this.viewMovieInfo.bind(this)
   }
 
   getMovies(){
@@ -18,13 +22,22 @@ class App extends Component {
         dataType:'json',
         cache:false,
         success: function(data){
-          this.setState({movies:data},function(){
-            console.log(this.state.movies.Search)
+          this.setState({movies:data.Search},function(){
+            console.log(this.state.movies)
           })
-        }.bind(this)
+        }.bind(this),
+        error: function(xhr,status,err){
+          console.log(err)
+        }
       })
   }
 
+  viewMovieInfo(index){
+    let imdbID = this.state.movies[index].imdbID
+    let url = `http://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`
+    console.log(url)
+    console.log(imdbID)
+  }
   componentWillMount(){
     this.getMovies();
   }
@@ -32,8 +45,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h2>Movies</h2>
-        <Movies movies={this.state.movies}/>
+        <h2>Batman Movies</h2>
+        <Movies movies={this.state.movies} viewMovieInfo={this.viewMovieInfo} />
+        <hr/>
+        <MovieDeets  />
       </div>
     );
   }

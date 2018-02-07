@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 
 export class Movies extends Component {
+
   render() {
-    let movies = this.props.movies.map(function(movie){
-      return (<div><li>{movie.Title}</li></div>)
-    })
+    let movies = this.props.movies.map((movie,index)=> <div className="card"><li className="list_of_movies"><p><a href="#" onClick={()=>this.props.viewMovieInfo(index)}>{movie.Title}</a></p><img className="pictures_sizing" src={movie.Poster}/>
+</li></div>)
+
 
   return (
-<div>
-    {movies}
-</div>
-  );
+    <div className="container">
+      <div className="row main offset-1">
+        {movies}
+      </div>
+    </div>
+    );
 }
 }
