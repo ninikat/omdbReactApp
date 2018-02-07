@@ -11,7 +11,9 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state= {
-      movies:[]
+      movies:[],
+      info:[],
+      picURL:[]
     }
     this.viewMovieInfo=this.viewMovieInfo.bind(this)
   }
@@ -35,9 +37,27 @@ class App extends Component {
   viewMovieInfo(index){
     let imdbID = this.state.movies[index].imdbID
     let url = `http://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`
-    console.log(url)
-    console.log(imdbID)
+
+
+    this.setState({
+       picURL:this.state.movies[index].Poster
+   })
+
+    $.ajax({
+      url:url,
+      dataType:'json',
+      cache:false,
+      success: function(data){
+        this.setState({info:data}, function(){
+          //console.log(picURL)
+        })
+      }.bind(this),
+      error: function(xhr,status,err){
+        console.log(err)
+      }
+    })
   }
+
   componentWillMount(){
     this.getMovies();
   }
@@ -48,7 +68,7 @@ class App extends Component {
         <h2>Batman Movies</h2>
         <Movies movies={this.state.movies} viewMovieInfo={this.viewMovieInfo} />
         <hr/>
-        <MovieDeets  />
+        <MovieDeets movies={this.state.movies} picture={this.state.picURL} info={this.state.info} />
       </div>
     );
   }
